@@ -1,0 +1,25 @@
+var GetManagerInfo = Class.create();
+GetManagerInfo.prototype = Object.extendsObject(AbstractAjaxProcessor, {
+    getManagerEmail: function() {
+        var userId = this.getParameter('sysparm_user_id');
+        var userGR = new GlideRecord('sys_user');
+        userGR.addQuery('sys_id', userId);
+        userGR.query();
+
+        if (userGR.next()) {
+            var managerId = userGR.getValue('manager');
+            var managerGR = new GlideRecord('sys_user');
+            managerGR.addQuery('sys_id', managerId);
+            managerGR.query();
+
+            if (managerGR.next()) {
+                var email = managerGR.getValue('email');
+                return email;
+            }
+        }
+
+        return '';
+    },
+
+    type: 'GetManagerInfo'
+});
